@@ -2145,6 +2145,36 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
     }
 // [/RLVa:KB]
 
+
+#ifdef OPENSIM // humbletim:FIRE-33613: Camera cannot be located at negative Z
+
+// local shadow so we can tune the llmax comprehension below
+F32 F_ALMOST_ZERO = ::F_ALMOST_ZERO;
+
+//#include "llviewernetwork.h" // For LLGridManager
+//if (!LLGridManager::getInstance()->isInSecondLife()) {
+  static LLCachedControl<F32> htxUseMinSimHeight{ gSavedSettings, "htxUseMinSimHeight", 0.0f,
+     "0.0 == stock behavior\n"
+     "1.0 (> 0.0) == apply SimulationFeatures.MinSimHeight (if advertised)\n"
+     "< 0.0f == use this value 'as' MinSimHeight for testing\n"
+  };
+
+  if (htxUseMinSimHeight == 0.0f) {
+    ; // stock behavior
+  } else if (htxUseMinSimHeight < 0.0f) {
+    // coerce floor to specified value
+    F_ALMOST_ZERO += htxUseMinSimHeight;
+   } else if (auto regionp = LLWorld::getInstance()->getRegionFromPosGlobal(camera_position_global)) {
+      LLSD info;
+      regionp->getSimulatorFeatures(info);
+      if (info.has("OpenSimExtras")) {
+        auto const& extras { info["OpenSimExtras"] };
+        F_ALMOST_ZERO += extras["MinSimHeight"].asReal(); // += -100.0
+      }
+    }
+//}
+#endif
+
     // Don't let camera go underground
     F32 camera_min_off_ground = getCameraMinOffGround();
     camera_land_height = LLWorld::getInstance()->resolveLandHeightGlobal(camera_position_global);
