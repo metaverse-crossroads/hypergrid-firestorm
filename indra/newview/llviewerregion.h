@@ -249,6 +249,7 @@ public:
 
     F32 getWidth() const                        { return mWidth; }
     F32 getWidthScaleFactor() const             { return mWidthScaleFactor; } // <FS:Ansariel> FIRE-19563: Scaling for OpenSim VarRegions
+    F32 getMinSimHeight() const { return mMinSimHeight; } // <FS:humbletim/> FIRE-33613: camera Z < 0 for OpenSim
 
     // regions are expensive to release, this function gradually releases cache from memory
     static void idleCleanup(F32 max_update_time);
@@ -548,7 +549,8 @@ public:
     S32         mLastUpdate; //last time called idleUpdate()
     F32         mWidthScaleFactor; // <FS:Ansariel> FIRE-19563: Scaling for OpenSim VarRegions
     S32         mMaxBakes; // <FS:Beq/> store max bakes on the region
-    S32         mMaxTEs; // <FS:Beq/> store max bakes on the region
+    S32         mMaxTEs; // <FS:Beq/> store max texture entries on the region
+    F32         mMinSimHeight; // <FS:humbletim/> FIRE-33613: OpenSim camera Z < 0
     // simulator name
     std::string mName;
     std::string mZoning;
