@@ -2146,16 +2146,10 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 // [/RLVa:KB]
 
 #ifdef OPENSIM // humbletim:FIRE-33613: Camera cannot be located at negative Z
-    // local variable shadow of the global constant
+    // local variable shadow of the ground plane constant (used in llmax below)
     F32 F_ALMOST_ZERO = ::F_ALMOST_ZERO;
     if (auto regionp = LLWorld::getInstance()->getRegionFromPosGlobal(camera_position_global)) {
       F_ALMOST_ZERO += regionp->getMinSimHeight();
-//      LLSD info;
-//      regionp->getSimulatorFeatures(info);
-//      if (info.has("OpenSimExtras")) {
-//        auto const& extras { info["OpenSimExtras"] };
-//        F_ALMOST_ZERO += extras["MinSimHeight"].asReal(); // += -100.0
-//      }
     }
 #endif
     // Don't let camera go underground

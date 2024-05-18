@@ -2636,9 +2636,7 @@ void LLViewerRegion::setSimulatorFeatures(const LLSD& sim_features)
 
 // <FS:humbletim> FIRE-33613: camera Z < 0 for OpenSim
 #ifdef OPENSIM
-    if (mSimulatorFeatures.has("OpenSimExtras") && mSimulatorFeatures["OpenSimExtras"].has("MinSimHeight")) {
-        mMinSimHeight = mSimulatorFeatures["OpenSimExtras"]["MinSimHeight"].asReal();
-    }
+    mMinSimHeight = !mSimulatorFeatures.has("OpenSimExtras") ? 0.0f : mSimulatorFeatures["OpenSimExtras"]["MinSimHeight"].asReal();
 #endif // OPENSIM
 // </FS:humbletim>
 }
